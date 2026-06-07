@@ -30,4 +30,4 @@ jobs:
 
       - name: Upload Files
         run: |
-          databricks workspace import_dir . /LIVE_dev --overwrite
+          databricks workspace import_dir src /LIVE_dev/src --overwrite
