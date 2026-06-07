@@ -1,4 +1,4 @@
-name: Deploy Live Folder to dev
+name: Deploy Live Folder
 
 on:
   push:
@@ -30,10 +30,35 @@ jobs:
           token=$DATABRICKS_TOKEN
           EOF
 
-      - name: Test Connection
+      - name: Verify Connection
         run: |
           databricks workspace ls /
+
+      - name: Show Repository Structure
+        run: |
+          echo "===== REPOSITORY CONTENTS ====="
+          pwd
+          ls -la
+          echo ""
+          echo "===== SRC CONTENTS ====="
+          find SRC
+
+      - name: Show Workspace Before Deploy
+        run: |
+          echo "===== ROOT ====="
+          databricks workspace ls / || true
+
+          echo "===== LIVE_dev BEFORE ====="
+          databricks workspace ls /LIVE_dev || true
 
       - name: Deploy to LIVE_dev
         run: |
           databricks workspace import_dir SRC /LIVE_dev --overwrite
+
+      - name: Show Workspace After Deploy
+        run: |
+          echo "===== LIVE_dev AFTER ====="
+          databricks workspace ls /LIVE_dev || true
+
+          echo "===== ROOT AFTER ====="
+          databricks workspace ls / || true
