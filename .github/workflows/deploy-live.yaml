@@ -30,21 +30,9 @@ jobs:
           token=$DATABRICKS_TOKEN
           EOF
 
-      - name: Show Repo Structure
+      - name: Import REPO Folder
         run: |
-          find . -type f | sort
-
-      - name: Create LIVE_dev Folder
-        run: |
-          databricks workspace mkdirs /LIVE_dev
-
-      - name: Import README
-        run: |
-          databricks workspace import README.md /LIVE_dev/README AUTO --overwrite || true
-
-      - name: Import SRC Folder
-        run: |
-          databricks workspace import_dir . /LIVE_dev/--overwrite
+          databricks workspace import_dir . /LIVE_dev
 
       - name: Verify Deployment
         run: |
