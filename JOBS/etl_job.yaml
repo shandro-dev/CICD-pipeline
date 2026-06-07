@@ -6,7 +6,7 @@ resources:
         - task_key: test
           notebook_task:
             # 1. Point to the file location relative to this YAML file
-            notebook_path: ../SRC/ingest_raw.ipynb
+            notebook_path: ../files/SRC/ingest_raw.ipynb
             # 2. Tell the bundle engine to track this file as a local project asset
             source: LABS 
           environment_key: Default
@@ -16,7 +16,7 @@ resources:
             - task_key: test
           notebook_task:
             # 1. Point to the file location relative to this YAML file
-            notebook_path: ../SRC/transform_silver.ipynb
+            notebook_path: ../files/SRC/transform_silver.ipynb
             # 2. Tell the bundle engine to track this file as a local project asset
             source: LABS
             
