@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - dev
-      - qa
       - main
 
 jobs:
@@ -42,7 +41,7 @@ jobs:
           databricks workspace ls /
 
           echo "===== LIVE_dev ====="
-          databricks workspace ls /LIVE_dev --overwrite
+          databricks workspace ls /LIVE_dev 
   
   deploy-prod:
     runs-on: ubuntu-latest
