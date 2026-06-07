@@ -1,13 +1,11 @@
 bundle:
   name: cicd-pipeline
 
-# Tell DABs to look into your JOBS folder for workflow configurations
-resources:
-  include:
-    - "JOBS/*.yaml"
-    - "JOBS/*.yml"
+# Fixes the 'unknown field: include' error by moving it out of the resources block
+include:
+  - "JOBS/*.yaml"
+  - "JOBS/*.yml"
 
-# Configure environments for your Dev and Prod workspaces
 targets:
   dev:
     workspace:
