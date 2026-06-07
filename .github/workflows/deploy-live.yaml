@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - dev
+      - qa
       - main
 
 jobs:
@@ -14,65 +15,55 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # 1. Install the modern Go-based Databricks CLI
       - name: Install Databricks CLI
         run: |
-          pip install databricks-cli
+          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
 
-      - name: Configure Databricks
+      # 2. Deploy both the code and the workflows using the 'dev' bundle target
+      - name: Deploy Asset Bundle to DEV
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_DEV }}
         run: |
-          mkdir -p ~/.databricks
-          cat > ~/.databrickscfg << EOF
-          [DEFAULT]
-          host=$DATABRICKS_HOST
-          token=$DATABRICKS_TOKEN
-          EOF
+          databricks bundle deploy -t dev
 
-      - name: Import REPO Folder
-        run: |
-          # Added the -o flag here to overwrite existing files
-          databricks workspace import_dir . /LIVE_dev -o
-
-      - name: Verify Deployment
-        run: |
-          echo "===== ROOT ====="
-          databricks workspace ls /
-          echo "===== LIVE_dev ====="
-          databricks workspace ls /LIVE_dev 
-  
-  deploy-prod:
+  deploy-qa:
     runs-on: ubuntu-latest
-    if: github.ref_name=='main'
+    if: github.ref_name == 'qa'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # 1. Install the modern Go-based Databricks CLI
       - name: Install Databricks CLI
         run: |
-          pip install databricks-cli
+          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
 
-      - name: Configure Databricks
+      # 2. Deploy both the code and the workflows using the 'qa' bundle target
+      - name: Deploy Asset Bundle to QA
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_QA }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_QA }}
+        run: |
+          databricks bundle deploy -t qa
+
+  deploy-prod:
+    runs-on: ubuntu-latest
+    if: github.ref_name == 'main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 1. Install the modern Go-based Databricks CLI
+      - name: Install Databricks CLI
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+
+      # 2. Deploy both the code and the workflows using the 'prod' bundle target
+      - name: Deploy Asset Bundle to PROD
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_PROD }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_PROD }}
         run: |
-          mkdir -p ~/.databricks
-          cat > ~/.databrickscfg << EOF
-          [DEFAULT]
-          host=$DATABRICKS_HOST
-          token=$DATABRICKS_TOKEN
-          EOF
-
-      - name: Import REPO Folder
-        run: |
-          # Added the -o flag here as well
-          databricks workspace import_dir . /LIVE_prod -o
-
-      - name: Verify Deployment
-        run: |
-          echo "===== ROOT ====="
-          databricks workspace ls /
-          echo "===== LIVE_prod ====="
-          databricks workspace ls /LIVE_prod
+          databricks bundle deploy -t prod
