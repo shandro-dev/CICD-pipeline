@@ -13,16 +13,11 @@ targets:
     workspace:
       host: https://dbc-207dff54-a451.cloud.databricks.com/ # Replace with your DEV host URL
       # In development mode, DABs automatically appends your username to the deployment path
-    root: /LIVE_dev
-    file_path: /LIVE_dev
-
-  # qa:
-  #   workspace:
-  #     host: https://adb-xxx.qa.azuredatabricks.net # Replace with your QA host URL
-  #     root: /Shared/.bundle/${bundle.name}/qa        # Shared execution path for QA team
+    root: /Workspace//LIVE_dev
+    file_path: /Workspace//LIVE_dev
 
   prod:
     workspace:
       host: https://dbc-f2464af9-5e50.cloud.databricks.com/ # Replace with your PROD host URL
-      root: /LIVE_prod    # Protected production execution path
-      file_path: /Live_prod
+      root: /Workspace//LIVE_prod    # Protected production execution path
+      file_path: /Workspace//Live_prod
