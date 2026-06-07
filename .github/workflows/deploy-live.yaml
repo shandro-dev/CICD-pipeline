@@ -42,7 +42,7 @@ jobs:
           databricks workspace ls /
 
           echo "===== LIVE_dev ====="
-          databricks workspace ls /LIVE_dev
+          databricks workspace ls /LIVE_dev --overwrite
   
   deploy-prod:
     runs-on: ubuntu-latest
