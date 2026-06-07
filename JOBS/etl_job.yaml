@@ -1,0 +1,29 @@
+resources:
+  jobs:
+    CICD_test:
+      name: CICD test
+      tasks:
+        - task_key: test
+          notebook_task:
+            # 1. Point to the file location relative to this YAML file
+            notebook_path: ../SRC/ingest_raw
+            # 2. Tell the bundle engine to track this file as a local project asset
+            source: LABS 
+          environment_key: Default
+
+        - task_key: test2
+          depends_on:
+            - task_key: test
+          notebook_task:
+            # 1. Point to the file location relative to this YAML file
+            notebook_path: ../SRC/transform_silver
+            # 2. Tell the bundle engine to track this file as a local project asset
+            source: LABS
+            
+      queue:
+        enabled: true
+      environments:
+        - environment_key: Default
+          spec:
+            environment_version: "5"
+      performance_target: PERFORMANCE_OPTIMIZED
