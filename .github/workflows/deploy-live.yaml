@@ -1,4 +1,4 @@
-name: Deploy Live Folder
+name: Deploy Live Folder to dev
 
 on:
   push:
@@ -30,22 +30,10 @@ jobs:
           token=$DATABRICKS_TOKEN
           EOF
 
-      - name: Verify Config
-        run: |
-          cat ~/.databrickscfg | sed 's/token=.*/token=***hidden***/'
-
-      - name: Verify Secrets Exist
-        env:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-        run: |
-          echo "HOST LENGTH: ${#DATABRICKS_HOST}"
-          echo "TOKEN LENGTH: ${#DATABRICKS_TOKEN}"
-
       - name: Test Connection
         run: |
           databricks workspace ls /
 
       - name: Deploy to LIVE_dev
         run: |
-          databricks workspace import_dir src /LIVE_dev --overwrite
+          databricks workspace import_dir SRC /LIVE_dev --overwrite
