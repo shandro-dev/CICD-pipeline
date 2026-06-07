@@ -4,11 +4,13 @@ on:
   push:
     branches:
       - dev
+      - qa
+      - main
 
 jobs:
-  deploy:
+  deploy-dev:
     runs-on: ubuntu-latest
-
+    if:github.ref_name=='dev'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -19,15 +21,15 @@ jobs:
 
       - name: Configure Databricks
         env:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_DEV }}
         run: |
           mkdir -p ~/.databricks
 
           cat > ~/.databrickscfg << EOF
           [DEFAULT]
-          host=$DATABRICKS_HOST
-          token=$DATABRICKS_TOKEN
+          host=$DATABRICKS_HOST_DEV
+          token=$DATABRICKS_TOKEN_DEV
           EOF
 
       - name: Import REPO Folder
@@ -41,3 +43,40 @@ jobs:
 
           echo "===== LIVE_dev ====="
           databricks workspace ls /LIVE_dev
+  
+  deploy-prod:
+    runs-on: ubuntu-latest
+    if github.ref_name=='main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Databricks CLI
+        run: |
+          pip install databricks-cli
+
+      - name: Configure Databricks
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_PROD }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_PROD }}
+        run: |
+          mkdir -p ~/.databricks
+
+          cat > ~/.databrickscfg << EOF
+          [DEFAULT]
+          host=$DATABRICKS_HOST_PROD
+          token=$DATABRICKS_TOKEN_PROD
+          EOF
+
+      - name: Import REPO Folder
+        run: |
+          databricks workspace import_dir . /LIVE_prod
+
+      - name: Verify Deployment
+        run: |
+          echo "===== ROOT ====="
+          databricks workspace ls /
+
+          echo "===== LIVE_prod ====="
+          databricks workspace ls /LIVE_prod
+
