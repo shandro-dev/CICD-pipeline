@@ -14,7 +14,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Databricks CLI
-        run: pip install databricks-cli
+        run: |
+          pip install databricks-cli
 
       - name: Configure CLI
         run: |
@@ -27,6 +28,21 @@ jobs:
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+
+      - name: Check CLI Version
+        run: |
+          which databricks
+          databricks -v
+
+      - name: Show Repository Contents
+        run: |
+          pwd
+          ls -la
+          find . -maxdepth 3 -type d
+
+      - name: Test Databricks Connection
+        run: |
+          databricks workspace ls /
 
       - name: Upload Files
         run: |
