@@ -48,4 +48,4 @@ jobs:
 
       - name: Deploy to LIVE_dev
         run: |
-          databricks workspace import_dir src /LIVE_dev/src --overwrite
+          databricks workspace import_dir src /LIVE_dev --overwrite
