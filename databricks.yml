@@ -5,6 +5,7 @@ bundle:
 resources:
   include:
     - JOBS/*.yaml
+    - JOBS/*.yml
 
 # Configure mapping for your Dev, QA, and Prod environments
 targets:
