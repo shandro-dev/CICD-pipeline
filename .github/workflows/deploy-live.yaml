@@ -44,7 +44,7 @@ jobs:
 
       - name: Import SRC Folder
         run: |
-          databricks workspace import_dir SRC /LIVE_dev/SRC --overwrite
+          databricks workspace import_dir CICD-pipeline /LIVE_dev/ --overwrite
 
       - name: Verify Deployment
         run: |
