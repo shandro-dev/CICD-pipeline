@@ -15,38 +15,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 1. Install the modern Go-based Databricks CLI
       - name: Install Databricks CLI
         run: |
           curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
 
-      # 2. Deploy both the code and the workflows using the 'dev' bundle target
       - name: Deploy Asset Bundle to DEV
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_DEV }}
         run: |
           databricks bundle deploy -t dev
-
-  deploy-qa:
-    runs-on: ubuntu-latest
-    if: github.ref_name == 'qa'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      # 1. Install the modern Go-based Databricks CLI
-      - name: Install Databricks CLI
-        run: |
-          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
-
-      # 2. Deploy both the code and the workflows using the 'qa' bundle target
-      - name: Deploy Asset Bundle to QA
-        env:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_QA }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_QA }}
-        run: |
-          databricks bundle deploy -t qa
 
   deploy-prod:
     runs-on: ubuntu-latest
@@ -55,12 +33,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 1. Install the modern Go-based Databricks CLI
       - name: Install Databricks CLI
         run: |
           curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
 
-      # 2. Deploy both the code and the workflows using the 'prod' bundle target
       - name: Deploy Asset Bundle to PROD
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_PROD }}

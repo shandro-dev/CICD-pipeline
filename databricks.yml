@@ -1,25 +1,19 @@
 bundle:
-  name: cicd pipleine
+  name: cicd-pipeline
 
-# Tell DABs to look into your JOBS folder for workflow configurations
-resources:
-  include:
-    - JOBS/*.yaml
-
-# Configure mapping for your Dev, QA, and Prod environments
 targets:
   dev:
     workspace:
-      host: https://dbc-207dff54-a451.cloud.databricks.com/ # Replace with your DEV host URL
-      # In development mode, DABs automatically appends your username to the deployment path
-    mode: development
-
-  # qa:
-  #   workspace:
-  #     host: https://adb-xxx.qa.azuredatabricks.net # Replace with your QA host URL
-  #     root: /Shared/.bundle/${bundle.name}/qa        # Shared execution path for QA team
+      host: https://dbc-207dff54-a451.cloud.databricks.com/
+      root_path: /Workspace/LIVE_dev
+      file_path: /Workspace/LIVE_dev
 
   prod:
     workspace:
-      host: https://dbc-f2464af9-5e50.cloud.databricks.com/ # Replace with your PROD host URL
-      root: /LIVE_prod    # Protected production execution path
+      host: https://dbc-f2464af9-5e50.cloud.databricks.com/
+      root_path: /Workspace/LIVE_prod
+      file_path: /Workspace/LIVE_prod 
+
+include:
+  - "JOBS/*.yaml"
+  - "JOBS/*.yml"
