@@ -21,8 +21,8 @@ jobs:
 
       - name: Configure Databricks
         env:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_DEV }}
+          DATABRICKS_HOST_DEV: ${{ secrets.DATABRICKS_HOST_DEV }}
+          DATABRICKS_TOKEN_DEV: ${{ secrets.DATABRICKS_TOKEN_DEV }}
         run: |
           mkdir -p ~/.databricks
 
@@ -57,8 +57,8 @@ jobs:
 
       - name: Configure Databricks
         env:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_PROD }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_PROD }}
+          DATABRICKS_HOST_PROD: ${{ secrets.DATABRICKS_HOST_PROD }}
+          DATABRICKS_TOKEN_PROD: ${{ secrets.DATABRICKS_TOKEN_PROD }}
         run: |
           mkdir -p ~/.databricks
 
