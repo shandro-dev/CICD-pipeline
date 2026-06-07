@@ -10,7 +10,7 @@ on:
 jobs:
   deploy-dev:
     runs-on: ubuntu-latest
-    if:github.ref_name=='dev'
+    if: github.ref_name == 'dev'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
