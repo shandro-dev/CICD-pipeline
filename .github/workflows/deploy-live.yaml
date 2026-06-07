@@ -44,7 +44,7 @@ jobs:
 
       - name: Import SRC Folder
         run: |
-          databricks workspace import_dir CICD-pipeline /LIVE_dev/ --overwrite
+          databricks workspace import_dir . /LIVE_dev/--overwrite
 
       - name: Verify Deployment
         run: |
@@ -53,6 +53,3 @@ jobs:
 
           echo "===== LIVE_dev ====="
           databricks workspace ls /LIVE_dev
-
-          echo "===== LIVE_dev/SRC ====="
-          databricks workspace ls /LIVE_dev/SRC || true
