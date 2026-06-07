@@ -1,16 +1,21 @@
 bundle:
   name: cicd-pipeline
 
-# Fixes the 'unknown field: include' error by moving it out of the resources block
-include:
-  - "JOBS/*.yaml"
-  - "JOBS/*.yml"
+# In this CLI version, resources must wrap the targets and includes cleanly
+resources:
+  jobs:
+    # This blank block tells the CLI that jobs are handled dynamically by the include array
+    {}
 
 targets:
   dev:
     workspace:
       host: https://dbc-207dff54-a451.cloud.databricks.com/
-
   prod:
     workspace:
       host: https://dbc-f2464af9-5e50.cloud.databricks.com/
+
+# Move the file inclusion to the absolute bottom of the file
+include:
+  - "JOBS/*.yaml"
+  - "JOBS/*.yml"
