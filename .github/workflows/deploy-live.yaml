@@ -24,7 +24,6 @@ jobs:
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_DEV }}
         run: |
           mkdir -p ~/.databricks
-
           cat > ~/.databrickscfg << EOF
           [DEFAULT]
           host=$DATABRICKS_HOST
@@ -33,13 +32,13 @@ jobs:
 
       - name: Import REPO Folder
         run: |
-          databricks workspace import_dir . /LIVE_dev
+          # Added the -o flag here to overwrite existing files
+          databricks workspace import_dir . /LIVE_dev -o
 
       - name: Verify Deployment
         run: |
           echo "===== ROOT ====="
           databricks workspace ls /
-
           echo "===== LIVE_dev ====="
           databricks workspace ls /LIVE_dev 
   
@@ -60,7 +59,6 @@ jobs:
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_PROD }}
         run: |
           mkdir -p ~/.databricks
-
           cat > ~/.databrickscfg << EOF
           [DEFAULT]
           host=$DATABRICKS_HOST
@@ -69,13 +67,12 @@ jobs:
 
       - name: Import REPO Folder
         run: |
-          databricks workspace import_dir . /LIVE_prod
+          # Added the -o flag here as well
+          databricks workspace import_dir . /LIVE_prod -o
 
       - name: Verify Deployment
         run: |
           echo "===== ROOT ====="
           databricks workspace ls /
-
           echo "===== LIVE_prod ====="
           databricks workspace ls /LIVE_prod
-
