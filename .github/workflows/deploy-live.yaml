@@ -36,12 +36,7 @@ jobs:
 
       - name: Show Repository Structure
         run: |
-          echo "===== REPOSITORY CONTENTS ====="
-          pwd
-          ls -la
-          echo ""
-          echo "===== SRC CONTENTS ====="
-          find SRC
+          find . -type f | sort
 
       - name: Show Workspace Before Deploy
         run: |
