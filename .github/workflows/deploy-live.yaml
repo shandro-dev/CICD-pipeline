@@ -15,38 +15,52 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 1. Install the modern Go-based Databricks CLI
       - name: Install Databricks CLI
         run: |
           curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
 
-      # 2. Deploy both the code and the workflows using the 'dev' bundle target
-      - name: Deploy Asset Bundle to DEV
+      # 1. FORCE SYNC files straight to your static target folder layout
+      - name: Force Sync Files to LIVE_dev
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_DEV }}
+        run: |
+          databricks workspace sync . /Workspace/LIVE_dev --full-history
+
+      # 2. Deploy your workflow job infrastructure 
+      - name: Deploy Asset Bundle Resources to DEV
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_DEV }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_DEV }}
         run: |
           databricks bundle deploy -t dev
 
-  deploy-qa:
-    runs-on: ubuntu-latest
-    if: github.ref_name == 'qa'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+  # deploy-qa:
+  #   runs-on: ubuntu-latest
+  #   if: github.ref_name == 'qa'
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
 
-      # 1. Install the modern Go-based Databricks CLI
-      - name: Install Databricks CLI
-        run: |
-          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+  #     - name: Install Databricks CLI
+  #       run: |
+  #         curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
 
-      # 2. Deploy both the code and the workflows using the 'qa' bundle target
-      - name: Deploy Asset Bundle to QA
-        env:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_QA }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_QA }}
-        run: |
-          databricks bundle deploy -t qa
+  #     # 1. FORCE SYNC files straight to your static target folder layout
+  #     - name: Force Sync Files to LIVE_qa
+  #       env:
+  #         DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_QA }}
+  #         DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_QA }}
+  #       run: |
+  #         databricks workspace sync . /Workspace/LIVE_qa --full-history
+
+  #     # 2. Deploy your workflow job infrastructure
+  #     - name: Deploy Asset Bundle Resources to QA
+  #       env:
+  #         DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_QA }}
+  #         DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_QA }}
+  #       run: |
+  #         databricks bundle deploy -t qa
 
   deploy-prod:
     runs-on: ubuntu-latest
@@ -55,13 +69,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 1. Install the modern Go-based Databricks CLI
       - name: Install Databricks CLI
         run: |
           curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
 
-      # 2. Deploy both the code and the workflows using the 'prod' bundle target
-      - name: Deploy Asset Bundle to PROD
+      # 1. FORCE SYNC files straight to your static target folder layout
+      - name: Force Sync Files to LIVE_prod
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_PROD }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_PROD }}
+        run: |
+          databricks workspace sync . /Workspace/LIVE_prod --full-history
+
+      # 2. Deploy your workflow job infrastructure
+      - name: Deploy Asset Bundle Resources to PROD
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_PROD }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_PROD }}
