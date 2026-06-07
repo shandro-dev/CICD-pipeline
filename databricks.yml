@@ -11,6 +11,8 @@ targets:
   dev:
     workspace:
       host: https://dbc-207dff54-a451.cloud.databricks.com/
+      root_path: /Workspace/LIVE_dev
+
   prod:
     workspace:
       host: https://dbc-f2464af9-5e50.cloud.databricks.com/
