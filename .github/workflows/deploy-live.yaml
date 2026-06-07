@@ -7,6 +7,9 @@ on:
       - main
 
 jobs:
+  # =========================================================
+  # DEVELOPMENT DEPLOYMENT (Workspace Sync)
+  # =========================================================
   deploy-dev:
     runs-on: ubuntu-latest
     if: github.ref_name == 'dev'
@@ -14,68 +17,53 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Databricks CLI
-        run: |
-          pip install databricks-cli
+      # Industry Standard: Use the official Databricks CLI v2 installation action
+      - name: Setup Databricks CLI
+        uses: databricks/setup-cli@v1
 
-      - name: Configure Databricks
+      # Create the directory safely. v2 native commands don't crash if it exists.
+      - name: Create DEV Target Folder
         env:
-          DATABRICKS_HOST_DEV: ${{ secrets.DATABRICKS_HOST_DEV }}
-          DATABRICKS_TOKEN_DEV: ${{ secrets.DATABRICKS_TOKEN_DEV }}
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
         run: |
-          mkdir -p ~/.databricks
+          databricks workspace mkdirs /LIVE_dev
 
-          cat > ~/.databrickscfg << EOF
-          [DEFAULT]
-          host=$DATABRICKS_HOST_DEV
-          token=$DATABRICKS_TOKEN_DEV
-          EOF
-
-      - name: Import REPO Folder
+      # Industry Standard Sync: Safely merges changes into the folder without deleting it
+      - name: Sync REPO to DEV Workspace
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
         run: |
-          databricks workspace import_dir . /LIVE_dev
+          databricks workspace sync . /LIVE_dev --full-resync
 
-      - name: Verify Deployment
-        run: |
-          echo "===== ROOT ====="
-          databricks workspace ls /
 
-          echo "===== LIVE_dev ====="
-          databricks workspace ls /LIVE_dev 
-  
+  # =========================================================
+  # PRODUCTION DEPLOYMENT (Workspace Sync)
+  # =========================================================
   deploy-prod:
     runs-on: ubuntu-latest
-    if: github.ref_name=='main'
+    if: github.ref_name == 'main'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Databricks CLI
-        run: |
-          pip install databricks-cli
+      # Industry Standard: Use the official Databricks CLI v2 installation action
+      - name: Setup Databricks CLI
+        uses: databricks/setup-cli@v1
 
-      - name: Configure Databricks
+      - name: Create PROD Target Folder
         env:
-          DATABRICKS_HOST_PROD: ${{ secrets.DATABRICKS_HOST_PROD }}
-          DATABRICKS_TOKEN_PROD: ${{ secrets.DATABRICKS_TOKEN_PROD }}
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_PROD }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_PROD }}
         run: |
-          mkdir -p ~/.databricks
+          databricks workspace mkdirs /LIVE_prod
 
-          cat > ~/.databrickscfg << EOF
-          [DEFAULT]
-          host=$DATABRICKS_HOST_PROD
-          token=$DATABRICKS_TOKEN_PROD
-          EOF
-
-      - name: Import REPO Folder
+      # Industry Standard Sync: Overwrites modified notebooks safely in-place.
+      # No downtime for scheduled workflows or active Delta Live Tables.
+      - name: Sync REPO to PROD Workspace
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST_PROD }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN_PROD }}
         run: |
-          databricks workspace import_dir . /LIVE_prod
-
-      - name: Verify Deployment
-        run: |
-          echo "===== ROOT ====="
-          databricks workspace ls /
-
-          echo "===== LIVE_prod ====="
-          databricks workspace ls /LIVE_prod
-
+          databricks workspace sync . /LIVE_prod --full-resync
