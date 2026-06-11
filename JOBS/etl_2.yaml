@@ -5,7 +5,7 @@ resources:
       tasks:
         - task_key: task1
           notebook_task:
-            notebook_path: /Workspace/LIVE_dev/SRC/ingest_raw
+            notebook_path: ../SRC/ingest_raw
             source: WORKSPACE
           environment_key: Default
 
@@ -13,7 +13,7 @@ resources:
           depends_on:
             - task_key: task1
           notebook_task:
-            notebook_path: /Workspace/SRC/gold.ipynb
+            notebook_path: ../SRC/gold.ipynb
             source: WORKSPACE
       queue:
         enabled: true

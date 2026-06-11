@@ -6,20 +6,20 @@ resources:
       tasks:
         - task_key: test
           notebook_task:
-            notebook_path: /Workspace/LIVE_dev/SRC/ingest_raw
+            notebook_path: ../SRC/ingest_raw
             source: WORKSPACE
           environment_key: Default
         - task_key: test2
           depends_on:
             - task_key: test
           notebook_task:
-            notebook_path: /Workspace/LIVE_dev/SRC/transform_silver
+            notebook_path: ../SRC/transform_silver
             source: WORKSPACE
         - task_key: test3
           depends_on:
             - task_key: test2
           notebook_task:
-            notebook_path: /Workspace/SRC/gold.ipynb
+            notebook_path: ../SRC/gold.ipynb
             source: WORKSPACE
       queue:
         enabled: true
