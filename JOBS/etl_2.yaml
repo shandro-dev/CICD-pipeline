@@ -1,7 +1,7 @@
 resources:
   jobs:
-    CICD_test:
-      name: CICD test_2
+    CICD_test_2:
+      name: CICD test 2
       tasks:
         - task_key: task1
           notebook_task:
